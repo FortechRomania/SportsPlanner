@@ -1,4 +1,8 @@
-﻿using System;
+using System;
+using System.Net.Http;
+using SportsPlanner.Entities;
+using SportsPlanner.Gateways;
+
 
 using UIKit;
 
@@ -6,29 +10,38 @@ namespace SportsPlanner.iOS
 {
 	public partial class ViewController : UIViewController
 	{
-		int count = 1;
+		private IEventsGateway _eventsGateway;
 
-		public ViewController (IntPtr handle) : base (handle)
+		public ViewController(IntPtr handle) : base(handle)
 		{
+			_eventsGateway = new EventsApiGateway();
 		}
 
-		public override void ViewDidLoad ()
+		public override void ViewDidLoad()
 		{
-			base.ViewDidLoad ();
+			base.ViewDidLoad();
 			// Perform any additional setup after loading the view, typically from a nib.
-			Button.AccessibilityIdentifier = "myButton";
-			Button.TouchUpInside += delegate {
-				var title = string.Format ("{0} clicks!", count++);
-				Button.SetTitle (title, UIControlState.Normal);
+			Button.TouchUpInside += async delegate
+			{
+				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
 
-                MyClass myClass = new MyClass();
-            };
+				var searchEventsResult = await _eventsGateway.GetEventsAsync();
+				DisplaySearchEventsResult(searchEventsResult);
+
+				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
+			};
 		}
 
-		public override void DidReceiveMemoryWarning ()
+		private void DisplaySearchEventsResult(SearchEventsResult searchEventsResult)
 		{
-			base.DidReceiveMemoryWarning ();
-			// Release any cached data, images, etc that aren't in use.
+			var alertController = new UIAlertController();
+			alertController.Title = "Search Events Result";
+			alertController.Message = String.Format("Did receive the {0} events", searchEventsResult.Details.Total);
+
+			var dismissAction = UIAlertAction.Create("Dismiss", UIAlertActionStyle.Cancel, null);
+			alertController.AddAction(dismissAction);
+
+			PresentViewController(alertController, true, null);
 		}
 	}
 }

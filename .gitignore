@@ -5,3 +5,5 @@ SportsPlanner.iOS/obj/
 .vs/
 SportsPlanner.iOS/bin/
 SportsPlanner.Droid/bin/
+packages/
+*.userprefs
