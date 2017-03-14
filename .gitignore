@@ -7,3 +7,5 @@ SportsPlanner.iOS/bin/
 SportsPlanner.Droid/bin/
 packages/
 *.userprefs
+*.Designer.cs
+*.designer.cs
