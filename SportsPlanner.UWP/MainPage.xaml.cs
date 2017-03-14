@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace SportsPlanner.UWP
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MyClass myClass = new MyClass();
+            Event myClass = new Event();
         }
     }
 }

@@ -9,6 +9,14 @@
     <Import_RootNamespace>SportsPlanner</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)MyClass.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\Event.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\SearchEventsDetails.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Entities\SearchEventsResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gateways\IEventsGateway.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Gateways\EventsApiGateway.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Entities\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Gateways\" />
   </ItemGroup>
 </Project>
