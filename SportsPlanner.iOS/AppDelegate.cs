@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using GalaSoft.MvvmLight.Threading;
 using UIKit;
 
 namespace SportsPlanner.iOS
@@ -17,9 +18,13 @@ namespace SportsPlanner.iOS
 
 		public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
 		{
-			// Override point for customization after application launch.
-			// If not required for your application you can safely delete this method
-			return true;
+            // Override point for customization after application launch.
+            // If not required for your application you can safely delete this method
+
+            // MVVM Light's DispatcherHelper for cross-thread handling.
+            DispatcherHelper.Initialize(application);
+
+            return true;
 		}
 
 		public override void OnResignActivation (UIApplication application)
