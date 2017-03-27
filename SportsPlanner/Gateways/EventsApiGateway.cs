@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SportsPlanner.Entities;
+using System;
+using System.Diagnostics;
 
 namespace SportsPlanner.Gateways
 {
@@ -13,19 +15,24 @@ namespace SportsPlanner.Gateways
 
 			// TODO - Change this method to receive the search query parameters and remove the  hardcoded url
 			var url = "https://sportsplanner.com/custom/bootstrap_search_home/get_events.php?cat=0&dat=all&lat=49.4562193&ln=ro-RO&loc=DE&lon=11.0935726&r=100%0a";
-			try
-			{
-				var response = await httpClient.GetAsync(url);
-				var json = await response.Content.ReadAsStringAsync();
-				var searchEventsResult = JsonConvert.DeserializeObject<SearchEventsResult>(json);
+            try
+            {
+                var response = await httpClient.GetAsync(url);
+                var json = await response.Content.ReadAsStringAsync();
+                var searchEventsResult = JsonConvert.DeserializeObject<SearchEventsResult>(json);
 
-				return searchEventsResult;
-			}
-			finally
-			{
-				// TODO - Catch the exception and throw an application specific exception
-				httpClient.Dispose();
-			}
+                return searchEventsResult;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                return null;
+            }
+            finally
+            {
+                // TODO - Catch the exception and throw an application specific exception
+                httpClient.Dispose();
+            }
 		}
 	}
 }

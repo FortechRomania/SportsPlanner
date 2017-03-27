@@ -9,3 +9,9 @@ packages/
 *.userprefs
 *.Designer.cs
 *.designer.cs
+
+#user-specific files
+*.user
+
+project.lock.json
+*.csproj.bak

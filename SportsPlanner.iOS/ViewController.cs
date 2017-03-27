@@ -1,48 +1,35 @@
 using System;
-using System.Net.Http;
-using SportsPlanner.Entities;
-using SportsPlanner.Gateways;
-
-
 using UIKit;
+using System.Collections.Generic;
+using GalaSoft.MvvmLight.Helpers;
+using SportsPlanner.ViewModels;
 
 namespace SportsPlanner.iOS
 {
-	public partial class ViewController : UIViewController
+    public partial class ViewController : UIViewController
 	{
-		private IEventsGateway _eventsGateway;
+        // Keep track of bindings to avoid premature garbage collection
+        private readonly List<Binding> bindings = new List<Binding>();
 
-		public ViewController(IntPtr handle) : base(handle)
+        // Gets a reference to the MainViewModel from the ViewModelLocator.
+        private MainViewModel ViewModel
+        {
+            get
+            {
+                return Application.Locator.MainViewModel;
+            }
+        }
+
+        public ViewController(IntPtr handle) : base(handle)
 		{
-			_eventsGateway = new EventsApiGateway();
 		}
 
 		public override void ViewDidLoad()
 		{
 			base.ViewDidLoad();
-			// Perform any additional setup after loading the view, typically from a nib.
-			Button.TouchUpInside += async delegate
-			{
-				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = true;
 
-				var searchEventsResult = await _eventsGateway.GetEventsAsync();
-				DisplaySearchEventsResult(searchEventsResult);
-
-				UIApplication.SharedApplication.NetworkActivityIndicatorVisible = false;
-			};
-		}
-
-		private void DisplaySearchEventsResult(SearchEventsResult searchEventsResult)
-		{
-			var alertController = new UIAlertController();
-			alertController.Title = "Search Events Result";
-			alertController.Message = String.Format("Did receive the {0} events", searchEventsResult.Details.Total);
-
-			var dismissAction = UIAlertAction.Create("Dismiss", UIAlertActionStyle.Cancel, null);
-			alertController.AddAction(dismissAction);
-
-			PresentViewController(alertController, true, null);
-		}
+            Button.SetCommand(nameof(UIControl.TouchUpInside), ViewModel.GetEventsCommand);
+        }
 	}
 }
 

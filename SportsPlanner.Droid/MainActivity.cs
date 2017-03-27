@@ -1,44 +1,41 @@
-using System;
-using System.Net.Http;
-using SportsPlanner.Entities;
-using SportsPlanner.Gateways;
-
 using Android.App;
 using Android.Widget;
 using Android.OS;
+using SportsPlanner.ViewModels;
+using System.Collections.Generic;
+using GalaSoft.MvvmLight.Helpers;
+using GalaSoft.MvvmLight.Views;
 
 namespace SportsPlanner.Droid
 {
-	[Activity(Label = "SportsPlanner.Droid", MainLauncher = true, Icon = "@drawable/icon")]
-	public class MainActivity : Activity
+    [Activity(Label = "SportsPlanner.Droid", MainLauncher = true, Icon = "@drawable/icon")]
+	public partial class MainActivity : ActivityBase
 	{
-		private IEventsGateway _eventsGateway;
+        // Keep track of bindings to avoid premature garbage collection
+        private readonly List<Binding> bindings = new List<Binding>();
+
+        // Gets a reference to the MainViewModel from the ViewModelLocator.
+        private MainViewModel ViewModel
+        {
+            get
+            {
+                return App.Locator.MainViewModel;
+            }
+        }
 
 		protected override void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
-			_eventsGateway = new EventsApiGateway();
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
 
-			// Get our button from the layout resource,
-			// and attach an event to it
-			Button button = FindViewById<Button>(Resource.Id.myButton);
+            GetEventsBtn.SetCommand(nameof(Android.Views.View.Click), ViewModel.GetEventsCommand);
 
-			button.Click += async delegate
-			{
-				var searchEventsResult = await _eventsGateway.GetEventsAsync();
-				DisplaySearchEventsResult(searchEventsResult);
-			};
-		}
-
-		private void DisplaySearchEventsResult(SearchEventsResult searchEventsResult)
-		{
-			new AlertDialog.Builder(this).SetTitle("Search Events Result")
-						   .SetMessage(String.Format("Did receive the {0} events", searchEventsResult.Details.Total))
-						   .SetNegativeButton(Resource.String.dismiss_button, (sender, e) => { })
-						   .Show();
-		}
+            bindings.Add(
+                this.SetBinding(
+                    () => ViewModel.PageTitle,
+                    () => PageTitle.Text));
+        }
 	}
 }
